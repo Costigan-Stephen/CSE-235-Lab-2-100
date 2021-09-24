@@ -148,9 +148,11 @@ vector <T> :: vector()
 template <typename T>
 vector <T> :: vector(size_t num, const T & t) 
 {
-   data = new T[10];
-   numCapacity = 99;
-   numElements = 99;
+    vector<T> data(num);
+    for (int i = 0;i < num;i++)
+    {
+        data[i] = t;
+    }
 }
 
 /*****************************************
@@ -173,9 +175,12 @@ vector <T> :: vector(const std::initializer_list<T> & l)
 template <typename T>
 vector <T> :: vector(size_t num) 
 {
-   data = new T[10];
-   numCapacity = 99;
-   numElements = 99;
+    vector<T> data(num);
+    T default = 0;
+    for (int i = 0;i < num;i++)
+    {
+        data[i] = default;
+    }
 }
 
 /*****************************************
@@ -186,9 +191,12 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
-   data = new T[10];
-   numCapacity = 99;
-   numElements = 99;
+    int size = rhs.size();
+    vector<T> copy(size);
+    for (int i = -;i < size;i++)
+    {
+        copy[i] = rhs[i];
+    }
 }
 
 /*****************************************
