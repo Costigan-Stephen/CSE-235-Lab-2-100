@@ -148,7 +148,7 @@ vector <T> :: vector()
 template <typename T>
 vector <T> :: vector(size_t num, const T & t) 
 {
-    vector<T> data(num);
+    data = new T[num];
     for (int i = 0;i < num;i++)
     {
         data[i] = t;
@@ -175,11 +175,11 @@ vector <T> :: vector(const std::initializer_list<T> & l)
 template <typename T>
 vector <T> :: vector(size_t num) 
 {
-    vector<T> data(num);
-    T default = 0;
+    data = new T[num];
+    T input = 0;
     for (int i = 0;i < num;i++)
     {
-        data[i] = default;
+        data[i] = input;
     }
 }
 
@@ -191,12 +191,9 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
-    int size = rhs.size();
-    vector<T> copy(size);
-    for (int i = -;i < size;i++)
-    {
-        copy[i] = rhs[i];
-    }
+    numCapacity = rhs.size();
+    vector<T> copy(numCapacity);
+    copy = rhs;
 }
 
 /*****************************************
