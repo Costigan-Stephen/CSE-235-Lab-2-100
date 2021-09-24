@@ -1,0 +1,103 @@
+ * VECTOR :: NON-DEFAULT constructors - Corbin
+template <typename T, typename A>
+vector <T, A> :: vector(const A & a)
+
+template <typename T, typename A>
+vector <T, A> :: vector(size_t num, const T & t, const A & a) 
+
+
+
+ * VECTOR :: INITIALIZATION LIST constructors - Steve
+template <typename T, typename A>
+vector <T, A> :: vector(const std::initializer_list<T> & l, const A & a) 
+
+
+
+ * VECTOR :: NON-DEFAULT constructors - Corbin
+template <typename T, typename A>
+vector <T, A> :: vector(size_t num, const A & a) 
+
+
+
+ * VECTOR :: COPY CONSTRUCTOR - Corbin
+template <typename T, typename A>
+vector <T, A> :: vector (const vector & rhs) 
+
+
+   
+ * VECTOR :: MOVE CONSTRUCTOR - Jon
+template <typename T, typename A>
+vector <T, A> :: vector (vector && rhs) 
+
+
+
+ * VECTOR :: DESTRUCTOR - Steve
+template <typename T, typename A>
+vector <T, A> :: ~vector()
+
+
+
+ * VECTOR :: RESIZE - Jon
+template <typename T, typename A>
+void vector <T, A> :: resize(size_t newElements)
+
+template <typename T, typename A>
+void vector <T, A> :: resize(size_t newElements, const T & t)
+
+
+
+ * VECTOR :: RESERVE - Jon
+template <typename T, typename A>
+void vector <T, A> :: reserve(size_t newCapacity)
+
+
+
+
+ * VECTOR :: SHRINK TO FIT - Alex
+template <typename T, typename A>
+void vector <T, A> :: shrink_to_fit()
+
+
+
+ * VECTOR :: SUBSCRIPT - Alex
+template <typename T, typename A>
+T & vector <T, A> :: operator [] (size_t index)
+
+template <typename T, typename A>
+const T & vector <T, A> :: operator [] (size_t index) const
+
+
+
+ * VECTOR :: FRONT - Steve
+template <typename T, typename A>
+T & vector <T, A> :: front ()
+
+template <typename T, typename A>
+const T & vector <T, A> :: front () const
+
+
+
+ * VECTOR :: BACK - Steve
+template <typename T, typename A>
+T & vector <T, A> :: back()
+
+template <typename T, typename A>
+const T & vector <T, A> :: back() const
+
+
+
+ * VECTOR :: PUSH BACK - Alex
+template <typename T, typename A>
+void vector <T, A> :: push_back (const T & t)
+
+template <typename T, typename A>
+void vector <T, A> ::push_back(T && t)
+
+
+
+ * VECTOR :: ASSIGNMENT - Alex
+template <typename T, typename A>
+vector <T, A> & vector <T, A> :: operator = (const vector & rhs)
+
+template <typename T, typename A>
+vector <T, A>& vector <T, A> :: operator = (vector&& rhs)

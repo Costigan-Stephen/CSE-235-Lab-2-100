@@ -16,7 +16,7 @@
  *        vector                 : A class that represents a Vector
  *        vector::iterator       : An interator through Vector
  * Author
- *    <your names here>
+ *    Stephen Costigan, Alexander Dohms, Jonathan Colwell
  ************************************************************************/
 
 #pragma once
@@ -56,7 +56,9 @@ public:
 
    void swap(vector& rhs)
    {
-
+       data = rhs.data;
+       numCapacity = rhs.numCapacity;
+       numElements = rhs.numElements;
    }
    vector & operator = (const vector & rhs);
    vector& operator = (vector&& rhs);
@@ -66,8 +68,8 @@ public:
    //
 
    class iterator;
-   iterator       begin() { return iterator(); }
-   iterator       end() { return iterator(); }
+   iterator       begin() { return iterator(data); }
+   iterator       end() { return iterator(data - 1); }
 
    //
    // Access
@@ -106,9 +108,9 @@ public:
    // Status
    //
 
-   size_t  size()          const { return 999;}
-   size_t  capacity()      const { return 999;}
-   bool empty()            const { return true;}
+   size_t  size()          const { return numElements;}
+   size_t  capacity()      const { return numCapacity;}
+   bool empty()            const { return (size() > 0 ? false : true);}
    
    // adjust the size of the buffer
    
@@ -209,7 +211,12 @@ vector <T> :: vector (vector && rhs)
 template <typename T>
 vector <T> :: ~vector()
 {
-   
+    data = NULL;
+    if (numElements > 0) {
+        numElements = 0; // Set to 0
+        shrink_to_fit();     // remove all elements between numElements (0) and numCapacity
+    }
+    delete[] data;
 }
 
 /***************************************
@@ -254,7 +261,16 @@ void vector <T> :: reserve(size_t newCapacity)
 template <typename T>
 void vector <T> :: shrink_to_fit()
 {
-   
+    if (numElements == numCapacity)
+        return;
+
+    T* dataNew = new T[numElements];
+    for (int i = 0; i < numElements; i++) {
+        dataNew[i] = data[i];
+    }
+
+    data = dataNew;
+    numCapacity = numElements;
 }
 
 
@@ -266,8 +282,7 @@ void vector <T> :: shrink_to_fit()
 template <typename T>
 T & vector <T> :: operator [] (size_t index)
 {
-   return *(new T);
-   
+    return *(data + index);
 }
 
 /******************************************
@@ -277,7 +292,7 @@ T & vector <T> :: operator [] (size_t index)
 template <typename T>
 const T & vector <T> :: operator [] (size_t index) const
 {
-   return *(new T);
+    return *(data + index);
 }
 
 /*****************************************
@@ -287,8 +302,7 @@ const T & vector <T> :: operator [] (size_t index) const
 template <typename T>
 T & vector <T> :: front ()
 {
-   
-   return *(new T);
+    return data[0];
 }
 
 /******************************************
@@ -298,7 +312,7 @@ T & vector <T> :: front ()
 template <typename T>
 const T & vector <T> :: front () const
 {
-   return *(new T);
+    return data[0];
 }
 
 /*****************************************
@@ -308,7 +322,7 @@ const T & vector <T> :: front () const
 template <typename T>
 T & vector <T> :: back()
 {
-   return *(new T);
+    return data[numElements - 1];
 }
 
 /******************************************
@@ -318,7 +332,7 @@ T & vector <T> :: back()
 template <typename T>
 const T & vector <T> :: back() const
 {
-   return *(new T);
+    return data[numElements - 1];
 }
 
 /***************************************
@@ -378,47 +392,53 @@ class vector <T> :: iterator
 {
 public:
    // constructors, destructors, and assignment operator
-   iterator()      { this->p = new T; }
-   iterator(T * p)        { this->p = new T; }
-   iterator(const iterator & rhs) { this->p = new T; }
+   iterator()                       { this->p = 0; }
+   iterator(T * p)                  { this->p = p; }
+   iterator(const iterator & rhs)   { this->p = rhs.p; }
    iterator & operator = (const iterator & rhs)
    {
-      this->p = new T;
+      this->p = rhs.p;
       return *this;
    }
    
    // equals, not equals operator
-   bool operator != (const iterator & rhs) const { return true; }
-   bool operator == (const iterator & rhs) const { return true; }
+   bool operator != (const iterator& rhs) const { return (rhs.p != p ? true : false); }
+   bool operator == (const iterator& rhs) const { return (rhs.p == p ? true : false); }
    
    // dereference operator
    T & operator * ()
    {
-      return *(new T);
+      return *p;
    }
    
    // prefix increment
    iterator & operator ++ ()
    {
-      return *this;
+       p++;
+       return *this;
    }
    
    // postfix increment
    iterator operator ++ (int postfix)
    {
-      return *this;
+       iterator i = p;
+       p++;
+       return i;
    }
    
    // prefix decrement
    iterator & operator -- ()
    {
-      return *this;
+       p--;
+       return *this;
    }
    
    // postfix decrement
    iterator operator -- (int postfix)
    {
-      return *this;
+       iterator i = p;
+       p--;
+       return i;
    }
    
 #ifdef DEBUG // make this visible to the unit tests

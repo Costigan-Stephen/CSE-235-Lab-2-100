@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LabVector", "LabVector.vcxproj", "{73A7474A-51B7-4287-ADF9-1156215BAD2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{461FA4A9-D55A-444B-A8B3-D27AE9EA3317}"
+	ProjectSection(SolutionItems) = preProject
+		TODOFunctions.txt = TODOFunctions.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
