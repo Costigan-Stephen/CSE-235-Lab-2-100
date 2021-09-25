@@ -252,14 +252,8 @@ vector <T> :: vector (const vector & rhs)
     numCapacity = rhs.numCapacity;
     numElements = rhs.numElements;
     data = NULL;
-    try
-    {
-        data = new T[numCapacity];
-    }
-    catch (std::bad_alloc)
-    {
-        throw "ERROR: Unable to allocate buffer";
-    }
+
+    data = new T[numCapacity];
 
     // set left to right
     for (int i = 0; i < numCapacity; i++)
@@ -275,8 +269,10 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
-    numCapacity = rhs.numCapacity;
-    numElements = rhs.numElements;
+    if (rhs.numElements > numElements) {
+        numCapacity = rhs.numCapacity;
+        numElements = rhs.numElements;
+    }
     rhs.numCapacity = 0;
     rhs.numElements = 0;
 
