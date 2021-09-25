@@ -347,6 +347,14 @@ void vector <T> :: reserve(size_t newCapacity)
         numCapacity = newCapacity;
 
     // JON, ASK TUTOR ABOUT THIS :) [hint, setting base values]
+    T* dataCopy = data;
+    dataCopy = data;
+    data = NULL;
+    data = new T[numCapacity, 0];
+    for (int i = 0; i < numElements-1; i++)
+    {
+        data[i] = dataCopy[i];
+    }
 }
 
 /***************************************
