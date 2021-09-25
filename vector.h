@@ -137,6 +137,7 @@ public:
    void clear()
    {
        numElements = 0;
+       data = new T[numCapacity];
    }
    void pop_back()
    {
@@ -190,7 +191,7 @@ vector <T> :: vector(size_t num, const T & t)
     numCapacity = num;
     numElements = 0;
     data = new T[numCapacity];
-    for (int i = 0;i < numCapacity;i++)
+    for (int i = 0;i < numCapacity; i++)
     {
         data[i] = t;
         if (data[i] != NULL)
@@ -298,6 +299,7 @@ template <typename T>
 vector <T> :: ~vector()
 {
     data = NULL;
+    numCapacity = 0;
     if (numElements > 0) {
         numElements = 0; // Set to 0
         shrink_to_fit();     // remove all elements between numElements (0) and numCapacity
@@ -323,9 +325,13 @@ void vector <T> :: resize(size_t newElements)
         newData[i] = data[i];
     }
 
-    delete[]data;
-    data = newData;
+    data = NULL;
     numCapacity = newElements;
+    data = new T[numCapacity];
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = newData[i];
+    }
 }
 
 template <typename T>
@@ -339,9 +345,13 @@ void vector <T> :: resize(size_t newElements, const T & t)
         newData[i] = data[i];
     }
 
-    delete[]data;
-    data = newData;
+    data = NULL;
     numCapacity = newElements;
+    data = new T[numCapacity];
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = newData[i];
+    }
 }
 
 /***************************************
