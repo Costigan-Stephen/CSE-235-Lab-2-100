@@ -179,7 +179,7 @@ private:
 template <typename T>
 vector <T> :: vector()
 {
-   data = new T[0];
+   data = NULL;
    numCapacity = 0;
    numElements = 0;
 }

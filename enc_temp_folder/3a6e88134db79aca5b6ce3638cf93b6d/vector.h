@@ -179,7 +179,7 @@ private:
 template <typename T>
 vector <T> :: vector()
 {
-   data = new T[0];
+   data = NULL;
    numCapacity = 0;
    numElements = 0;
 }
@@ -342,6 +342,9 @@ void vector <T> :: resize(size_t newElements, const T & t)
         numElements = 0;
         return;
     }
+
+    if (data == NULL)
+        data = new T[numCapacity];
     
     numCapacity = newElements;
     for (; numElements < numCapacity; numElements++) {
@@ -467,6 +470,9 @@ void vector <T> :: push_back (const T & t)
     if (this->numElements == this->numCapacity)
         resize(this->numCapacity * 2);
 
+    if (this->data == NULL)
+        data = new T[numCapacity];
+
     data[numElements++] = t;
 }
 
@@ -478,6 +484,9 @@ void vector <T> ::push_back(T && t)
 
     if (this->numElements == this->numCapacity)
         resize(this->numCapacity * 2);
+
+    if (this->data == NULL)
+        data = new T[numCapacity];
 
     data[numElements++] = t;
 }
