@@ -367,15 +367,11 @@ void vector <T> :: shrink_to_fit()
         return;
 
     T* dataNew = new T[numElements];
-    for (int i = 0; i < numElements; i++) {
+    for (int i = 0; i < numElements -1; i++) {
         dataNew[i] = data[i];
     }
-    data = NULL;
-    data = new T[numElements];
-    for (int i = 0; i < numElements; i++)
-    {
-        data[i] = dataNew[i];
-    }
+
+    data = dataNew;
     numCapacity = numElements;
 }
 
