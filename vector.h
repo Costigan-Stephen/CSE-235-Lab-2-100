@@ -317,10 +317,20 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
+    if (newElements == 0)
+    {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
+        return;
+    }
+    if (newElements < numElements)
+        numElements = newElements;
+
     T* newData;
     newData = new T[newElements];
 
-    for (int i = 0; i < numElements; ++i)
+    for (int i = 0; i < numElements; i++)
     {
         newData[i] = data[i];
     }
@@ -337,10 +347,20 @@ void vector <T> :: resize(size_t newElements)
 template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
+    if (newElements == 0)
+    {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
+        return;
+    }
+    if (newElements < numElements)
+        numElements = newElements;
+
     T* newData;
     newData = new T[newElements];
 
-    for (int i = 0; i < numElements; ++i)
+    for (int i = 0; i < numElements; i++)
     {
         newData[i] = data[i];
     }
