@@ -25,6 +25,8 @@
 #include <new>      // std::bad_alloc
 #include <memory>   // for std::allocator
 
+#include <iostream>
+
 
 namespace custom
 {
@@ -62,14 +64,14 @@ public:
        T* dataCopy = new T[numCapacity];
 
        // copy left values to new vector
-       for (int i = 0; i < numCapacity; i++)
+       for (int i = 0; i < numElements; i++)
        {
            dataCopy[i] = data[i];
        }
        
        // copy left variables
        size_t numCapacityCopy = numCapacity;
-       size_t numElementsCopy = numCapacity;
+       size_t numElementsCopy = numElements;
        // replace left with right
        numCapacity = rhs.numCapacity;
        numElements = rhs.numElements;
@@ -82,7 +84,7 @@ public:
        data = new T[numCapacity];
 
        // set left to right
-       for (int i = 0; i < numCapacity; i++)
+       for (int i = 0; i < numElements; i++)
        {
            data[i] = rhs.data[i];
        }
@@ -91,7 +93,7 @@ public:
        rhs.data = new T[rhs.numCapacity];
 
        // set right to copy of left
-       for (int i = 0; i < rhs.numCapacity; i++)
+       for (int i = 0; i < numElementsCopy; i++)
        {
            rhs.data[i] = dataCopy[i];
        }
@@ -386,6 +388,7 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
+    std::cout << newCapacity << std::endl;
     if (newCapacity == 0)
     {
         numCapacity = 0;
@@ -421,6 +424,13 @@ void vector <T> :: shrink_to_fit()
 {
     if (numElements == numCapacity)
         return;
+
+    if (numElements == 0) {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
+        return;
+    }
 
     T* dataNew = new T[numElements];
     for (int i = 0; i < numElements; i++) {
