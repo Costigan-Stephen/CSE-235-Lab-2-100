@@ -280,10 +280,9 @@ vector <T> :: vector (vector && rhs)
         return;
     }
 
-    if (rhs.numElements > numElements) {
-        numCapacity = rhs.numCapacity;
-        numElements = rhs.numElements;
-    }
+    numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
+    
     rhs.numCapacity = 0;
     rhs.numElements = 0;
 
@@ -325,24 +324,31 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
-    if (newElements == 0)
+    if (!newElements || newElements == 0)
     {
         data = NULL;
+        numElements = 0;
         return;
     }
-
-    numCapacity = newElements;
+    reserve(newElements);
 }
 
 template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
-    if (newElements == 0)
+    if (!newElements || newElements == 0)
     {
         data = NULL;
+        numElements = 0;
         return;
     }
+    
     numCapacity = newElements;
+    for (; numElements < numCapacity; numElements++) {
+        data[numElements] = t;
+    }
+
+    
 }
 
 /***************************************
@@ -356,11 +362,10 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
-    if (newCapacity == 0)
-        return;
-
-    if(newCapacity > numCapacity)
+    if (newCapacity > 0)
         numCapacity = newCapacity;
+
+    
 }
 
 /***************************************
