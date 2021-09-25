@@ -58,8 +58,7 @@ public:
 
    void swap(vector& rhs)
    {
-       if (rhs.numElements == 0 || numElements == 0)
-           return;
+          
        // create a temp vector to store left values
        T* dataCopy = new T[numCapacity];
 
@@ -139,7 +138,6 @@ public:
    void clear()
    {
        numElements = 0;
-       data = new T[numCapacity];
    }
    void pop_back()
    {
