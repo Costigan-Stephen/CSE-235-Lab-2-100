@@ -244,7 +244,7 @@ vector <T> :: vector (const vector & rhs)
     numElements = rhs.numElements;
     data = NULL;
 
-    data = new T[numCapacity];
+    data = new T[rhs.numCapacity];
 
     // set left to right
     for (int i = 0; i < numCapacity; i++)
@@ -366,8 +366,6 @@ void vector <T> :: shrink_to_fit()
 
     numCapacity = numElements;
 }
-
-
 
 /*****************************************
  * VECTOR :: SUBSCRIPT
