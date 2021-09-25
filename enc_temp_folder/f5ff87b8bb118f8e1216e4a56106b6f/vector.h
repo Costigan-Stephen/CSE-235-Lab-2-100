@@ -324,25 +324,29 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
-    if (!newElements || newElements == 0)
+    if (newElements == 0)
     {
         data = NULL;
-        numElements = 0;
         return;
     }
-    numCapacity = newElements; 
+
+    T test;
+    test = 00;
+
+    numCapacity = newElements;
+    for (; numElements < numCapacity; numElements++) {
+        data[numElements] = test;
+    }
 }
 
 template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
-    if (!newElements || newElements == 0)
+    if (newElements == 0)
     {
         data = NULL;
-        numElements = 0;
         return;
     }
-    
     numCapacity = newElements;
     for (; numElements < numCapacity; numElements++) {
         data[numElements] = t;
