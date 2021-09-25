@@ -58,7 +58,6 @@ public:
 
    void swap(vector& rhs)
    {
-          
        // create a temp vector to store left values
        T* dataCopy = new T[numCapacity];
 
@@ -98,6 +97,10 @@ public:
        }
        // set copy to null
        dataCopy = NULL;
+       if (rhs.numCapacity == 0)
+           rhs.data = NULL;
+       if (numCapacity == 0)
+           data = NULL;
    }
    vector & operator = (const vector & rhs);
    vector& operator = (vector&& rhs);
