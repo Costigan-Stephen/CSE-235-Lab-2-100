@@ -107,7 +107,7 @@ public:
 
    class iterator;
    iterator       begin() { return iterator(data); }
-   iterator       end() { return iterator(data - 1); }
+   iterator       end() { return iterator(data + numElements); }
 
    //
    // Access
@@ -385,6 +385,15 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
+    if (newCapacity == 0)
+    {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
+        return;
+    }
+    if (newCapacity < numElements)
+        numElements = newCapacity;
    T* newData;
    newData = new T[numCapacity];
    for (int i = 0; i < numCapacity; i++)
