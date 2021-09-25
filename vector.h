@@ -168,7 +168,6 @@ vector <T> :: vector(size_t num, const T & t)
 
     for (int i = 0; i < num; i++)
        data[i] = t;
-    
 }
 
 /*****************************************
