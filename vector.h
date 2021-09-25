@@ -241,9 +241,20 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
-   data = new T[10];
-   numCapacity = 99;
-   numElements = 99;
+    numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
+    rhs.numCapacity = 0;
+    rhs.numElements = 0;
+
+    data = NULL;
+    data = new T[numCapacity];
+
+    // set left to right
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = rhs.data[i];
+    }
+    rhs.data = NULL;
 }
 
 /*****************************************
