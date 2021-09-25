@@ -56,6 +56,8 @@ public:
 
    void swap(vector& rhs)
    {
+       if (rhs.numElements == 0 || numElements == 0)
+           return;
        // create a temp vector to store left values
        T* dataCopy = new T[numCapacity];
 
@@ -186,10 +188,13 @@ template <typename T>
 vector <T> :: vector(size_t num, const T & t) 
 {
     numCapacity = num;
+    numElements = 0;
     data = new T[numCapacity];
     for (int i = 0;i < numCapacity;i++)
     {
         data[i] = t;
+        if (data[i] != NULL)
+            numElements++;
     }
 }
 
@@ -199,10 +204,15 @@ vector <T> :: vector(size_t num, const T & t)
  ****************************************/
 template <typename T>
 vector <T> :: vector(const std::initializer_list<T> & l) 
-{
-   data = new T[10];
-   numCapacity = 99;
-   numElements = 99;
+{   
+   numCapacity = l.size();
+   numElements = 0;
+   data = new T[numCapacity];
+   for (T const item : l)
+   {
+       data[numElements] = item;
+       numElements++;
+   }
 }
 
 /*****************************************
@@ -469,14 +479,30 @@ void vector <T> ::push_back(T && t)
 template <typename T>
 vector <T> & vector <T> :: operator = (const vector & rhs)
 {
-   
+    numCapacity = rhs.numCapacity;
+    data = NULL;
+    data = new T[numCapacity];
+
+    // set left to right
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = rhs.data[i];
+    }
    return *this;
 }
 template <typename T>
 vector <T>& vector <T> :: operator = (vector&& rhs)
 {
+    numCapacity = rhs.numCapacity;
+    data = NULL;
+    data = new T[numCapacity];
 
-   return *this;
+    // set left to right
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = rhs.data[i];
+    }
+    return *this;
 }
 
 /**************************************************
