@@ -212,8 +212,8 @@ vector <T> :: vector(const std::initializer_list<T> & l)
    data = new T[numCapacity];
    for (T const item : l)
    {
-       data[numElements] = item;
-       numElements++;
+       data[numElements++] = item;
+       
    }
 }
 
