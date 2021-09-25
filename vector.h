@@ -212,8 +212,7 @@ vector <T> :: vector(const std::initializer_list<T> & l)
    data = new T[numCapacity];
    for (T const item : l)
    {
-       data[numElements] = item;
-       numElements++;
+       data[numElements++] = item;
    }
 }
 
@@ -321,7 +320,6 @@ void vector <T> :: resize(size_t newElements)
     }
 
     numCapacity = newElements;
-
 }
 
 template <typename T>
