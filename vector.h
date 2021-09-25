@@ -172,8 +172,8 @@ private:
 template <typename T>
 vector <T> :: vector()
 {
-   data = new T[10];
-   numCapacity = 10;
+   data = new T[0];
+   numCapacity = 0;
    numElements = 0;
 }
 
@@ -229,9 +229,15 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
-    numCapacity = rhs.size();
-    vector<T> copy(numCapacity);
-    copy = rhs;
+    numCapacity = rhs.numCapacity;
+    data = NULL;
+    data = new T[numCapacity];
+
+    // set left to right
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = rhs.data[i];
+    }
 }
 
 /*****************************************
