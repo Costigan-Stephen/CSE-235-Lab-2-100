@@ -143,7 +143,7 @@ public:
 
    size_t   size()          const { return numElements;}
    size_t   capacity()      const { return numCapacity;}
-   bool     empty()         const { return (size() > 0 && data[0] ? false : true);}
+   bool   empty()          { return (begin() == end() ? true : false);}
    
    // adjust the size of the buffer
    
@@ -168,7 +168,7 @@ private:
 template <typename T>
 vector <T> :: vector()
 {
-   data = new T[0];
+    data = new T[0];
    numCapacity = 0;
    numElements = 0;
 }
@@ -187,7 +187,7 @@ vector <T> :: vector(size_t num, const T & t)
     for (int i = 0;i < numCapacity; i++)
     {
         data[i] = t;
-        if (data[i] != NULL)
+        if (&data[i] != NULL)
             numElements++;
     }
 }
@@ -232,25 +232,12 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
-    if (rhs.numCapacity == 0)
-    {
-        numCapacity = 0;
-        numElements = 0;
-        data = NULL;
-        return;
-    }
-
-    numCapacity = rhs.numCapacity;
-    numElements = rhs.numElements;
     data = NULL;
+    numElements = 0;
+    numCapacity = 0;
+    
+    *this = rhs;
 
-    data = new T[rhs.numCapacity];
-
-    // set left to right
-    for (int i = 0; i < numCapacity; i++)
-    {
-        data[i] = rhs.data[i];
-    }
 }
 
 /*****************************************
@@ -260,6 +247,18 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
+    // this is the simpler code, but it brings the percentage down a bit.
+    /*
+    data = rhs.data;
+    rhs.data = NULL;
+    
+    numElements = rhs.numElements;
+    rhs.numElements = 0;
+    
+    numCapacity = rhs.numCapacity;
+    rhs.numCapacity = 0;
+    */
+    
     if (rhs.numCapacity == 0)
     {
         data = NULL;
@@ -276,6 +275,7 @@ vector <T> :: vector (vector && rhs)
     rhs.numElements = 0;
     data = rhs.data;
     rhs.data = NULL;
+     
 }
 
 /*****************************************
@@ -305,18 +305,23 @@ vector <T> :: ~vector()
 template <typename T>
 void vector <T> :: resize(size_t newElements)
 {
+    reserve(newElements);
+    //numElements = newElements;
+    
     if (!newElements || newElements == 0)
     {
         data = NULL;
         numElements = 0;
         return;
     }
-    reserve(newElements); // JON, ASK TUTOR ABOUT THIS :)
+     // JON, ASK TUTOR ABOUT THIS :)
+    
 }
 
 template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
+    
     if (!newElements || newElements == 0)
     {
         data = NULL;
@@ -329,7 +334,6 @@ void vector <T> :: resize(size_t newElements, const T & t)
         data[numElements] = t;
     }
 
-    
 }
 
 /***************************************
@@ -343,8 +347,19 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
-    if (newCapacity > 0)
-        numCapacity = newCapacity;
+
+    if (newCapacity <= numCapacity)
+    return;
+    
+    T * dataNew = new T[newCapacity];
+    
+    for (int i = 0; i <= numElements; i++) {
+        dataNew[i] = data[i];
+    }
+    delete [] data;
+    
+    data = dataNew;
+    numCapacity = newCapacity;
 
     // JON, ASK TUTOR ABOUT THIS :) [hint, setting base values]
 }
