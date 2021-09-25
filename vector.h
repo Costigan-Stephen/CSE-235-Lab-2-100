@@ -176,10 +176,10 @@ template <typename T>
 vector <T> :: vector(size_t num) 
 {
     vector<T> data(num);
-    T default = 0;
+    T d = 0;
     for (int i = 0;i < num;i++)
     {
-        data[i] = default;
+        data[i] = d;
     }
 }
 
@@ -193,7 +193,7 @@ vector <T> :: vector (const vector & rhs)
 {
     int size = rhs.size();
     vector<T> copy(size);
-    for (int i = -;i < size;i++)
+    for (int i = 0;i < size;i++)
     {
         copy[i] = rhs[i];
     }
