@@ -271,6 +271,15 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
+    if (rhs.numCapacity == 0)
+    {
+        data = NULL;
+        rhs.numCapacity = 0;
+        rhs.numElements = 0;
+        rhs.data = NULL;
+        return;
+    }
+
     if (rhs.numElements > numElements) {
         numCapacity = rhs.numCapacity;
         numElements = rhs.numElements;
@@ -478,7 +487,8 @@ void vector <T> ::push_back(T && t)
 template <typename T>
 vector <T> & vector <T> :: operator = (const vector & rhs)
 {
-    numCapacity = rhs.numCapacity;
+    if(numCapacity < rhs.numCapacity)
+        numCapacity = rhs.numCapacity;
     numElements = rhs.numElements;
     data = NULL;
     data = new T[numCapacity];
