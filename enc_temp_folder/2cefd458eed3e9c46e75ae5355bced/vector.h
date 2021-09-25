@@ -212,8 +212,8 @@ vector <T> :: vector(const std::initializer_list<T> & l)
    data = new T[numCapacity];
    for (T const item : l)
    {
-       data[numElements++] = item;
-       
+       data[numElements] = item;
+       numElements++;
    }
 }
 
@@ -252,8 +252,14 @@ vector <T> :: vector (const vector & rhs)
     numCapacity = rhs.numCapacity;
     numElements = rhs.numElements;
     data = NULL;
-
-    data = new T[numCapacity];
+    try
+    {
+        data = new T[numCapacity];
+    }
+    catch (std::bad_alloc)
+    {
+        throw "ERROR: Unable to allocate buffer";
+    }
 
     // set left to right
     for (int i = 0; i < numCapacity; i++)
@@ -269,10 +275,8 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
-    if (rhs.numElements > numElements) {
-        numCapacity = rhs.numCapacity;
-        numElements = rhs.numElements;
-    }
+    numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
     rhs.numCapacity = 0;
     rhs.numElements = 0;
 
@@ -316,12 +320,30 @@ void vector <T> :: resize(size_t newElements)
 {
     if (newElements == 0)
     {
+        numCapacity = 0;
+        numElements = 0;
         data = NULL;
         return;
     }
+    /*if (newElements < numElements)
+        numElements = newElements;
+    numCapacity = newElements;*/
 
+   /* T* newData;
+    newData = new T[newElements];
+
+    for (int i = 0; i < numElements; i++)
+    {
+        newData[i] = data[i];
+    }
+
+    data = NULL;
     numCapacity = newElements;
-
+    data = new T[numCapacity];
+    for (int i = 0; i < numElements; i++)
+    {
+        data[i] = newData[i];
+    }*/
 }
 
 template <typename T>
@@ -329,10 +351,29 @@ void vector <T> :: resize(size_t newElements, const T & t)
 {
     if (newElements == 0)
     {
+        numCapacity = 0;
+        numElements = 0;
         data = NULL;
         return;
     }
+    if (newElements < numElements)
+        numElements = newElements;
+
+    T* newData;
+    newData = new T[newElements];
+
+    for (int i = 0; i < numElements; i++)
+    {
+        newData[i] = data[i];
+    }
+
+    data = NULL;
     numCapacity = newElements;
+    data = new T[numCapacity];
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = newData[i];
+    }
 }
 
 /***************************************
@@ -346,11 +387,29 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
+    std::cout << newCapacity << std::endl;
     if (newCapacity == 0)
+    {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
         return;
-
-    if(newCapacity > numCapacity)
-        numCapacity = newCapacity;
+    }
+    if (newCapacity < numElements)
+        numElements = newCapacity;
+   T* newData;
+   newData = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       newData[i] = data[i];
+   }
+   numCapacity = newCapacity;
+   data = NULL;
+   data = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       data[i] = newData[i];
+   }
 }
 
 /***************************************
@@ -362,12 +421,26 @@ void vector <T> :: reserve(size_t newCapacity)
 template <typename T>
 void vector <T> :: shrink_to_fit()
 {
+    if (numElements == numCapacity)
+        return;
+
     if (numElements == 0) {
         numCapacity = 0;
+        numElements = 0;
         data = NULL;
         return;
     }
 
+    T* dataNew = new T[numElements];
+    for (int i = 0; i < numElements; i++) {
+        dataNew[i] = data[i];
+    }
+    data = NULL;
+    data = new T[numElements];
+    for (int i = 0; i < numElements; i++)
+    {
+        data[i] = dataNew[i];
+    }
     numCapacity = numElements;
 }
 
