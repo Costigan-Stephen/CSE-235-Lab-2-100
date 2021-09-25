@@ -356,7 +356,28 @@ void vector <T> :: resize(size_t newElements, const T & t)
         data = NULL;
         return;
     }
+    /*if (newElements < numElements)
+        numElements = newElements;*/
+    if (newElements > numElements)
+        throw "ERROR: this resize will loose data.";
+
     numCapacity = newElements;
+
+   /* T* newData;
+    newData = new T[newElements];
+
+    for (int i = 0; i < numElements; i++)
+    {
+        newData[i] = data[i];
+    }
+
+    data = NULL;
+    
+    data = new T[numCapacity];
+    for (int i = 0; i < numCapacity; i++)
+    {
+        data[i] = newData[i];
+    }*/
 }
 
 /***************************************
@@ -378,8 +399,21 @@ void vector <T> :: reserve(size_t newCapacity)
         data = NULL;
         return;
     }
-
+    if (newCapacity < numElements)
+        numElements = newCapacity;
+   T* newData;
+   newData = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       newData[i] = data[i];
+   }
    numCapacity = newCapacity;
+   data = NULL;
+   data = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       data[i] = newData[i];
+   }
 }
 
 /***************************************
