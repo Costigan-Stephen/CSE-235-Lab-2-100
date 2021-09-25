@@ -141,7 +141,6 @@ public:
    }
    void pop_back()
    {
-       numElements--;
    }
    void shrink_to_fit();
 
@@ -149,9 +148,9 @@ public:
    // Status
    //
 
-   size_t   size()          const { return numElements;}
-   size_t   capacity()      const { return numCapacity;}
-   bool     empty()         const { return (size() > 0 ? false : true);}
+   size_t  size()          const { return numElements;}
+   size_t  capacity()      const { return numCapacity;}
+   bool empty()            const { return (size() > 0 ? false : true);}
    
    // adjust the size of the buffer
    
@@ -277,17 +276,27 @@ vector <T> :: vector (vector && rhs)
 {
     numCapacity = rhs.numCapacity;
     numElements = rhs.numElements;
-    rhs.numCapacity = 0;
-    rhs.numElements = 0;
+    //rhs.numCapacity = 0;
+    //rhs.numElements = 0;
 
-    data = NULL;
-    data = new T[numCapacity];
+    //data = NULL;
+    //data = new T[numCapacity];
 
-    // set left to right
-    for (int i = 0; i < numCapacity; i++)
+    //// set left to right
+    //for (int i = 0; i < numCapacity; i++)
+    //{
+    //    data[i] = rhs.data[i];
+    //}
+
+    while (numElements + rhs.numElements > numCapacity) {
+        numCapacity++;
+    }
+    for (int i = numElements; i < numCapacity; i++)
     {
         data[i] = rhs.data[i];
-    }
+    }      
+
+
     rhs.data = NULL;
 }
 
