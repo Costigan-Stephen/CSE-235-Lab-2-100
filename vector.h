@@ -239,9 +239,25 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
+    if (rhs.numCapacity == 0)
+    {
+        numCapacity = 0;
+        numElements = 0;
+        data = NULL;
+        return;
+    }
+
     numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
     data = NULL;
-    data = new T[numCapacity];
+    try
+    {
+        data = new T[numCapacity];
+    }
+    catch (std::bad_alloc)
+    {
+        throw "ERROR: Unable to allocate buffer";
+    }
 
     // set left to right
     for (int i = 0; i < numCapacity; i++)
@@ -388,7 +404,8 @@ void vector <T> :: shrink_to_fit()
 template <typename T>
 T & vector <T> :: operator [] (size_t index)
 {
-    return *(data + index);
+    /*return *(data + index);*/
+    return data[index];
 }
 
 /******************************************
@@ -398,7 +415,8 @@ T & vector <T> :: operator [] (size_t index)
 template <typename T>
 const T & vector <T> :: operator [] (size_t index) const
 {
-    return *(data + index);
+    //return *(data + index);
+    return data[index];
 }
 
 /*****************************************
