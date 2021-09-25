@@ -58,17 +58,38 @@ public:
 
    void swap(vector& rhs)
    {
-       T* tempdata = rhs.data;
-       rhs.data = data;
-       data = tempdata;
+       // create a temp vector to store left values
+       T* dataCopy = new T[numCapacity];
+       dataCopy = data;
+       
+       // copy left variables
+       size_t numCapacityCopy = numCapacity;
+       size_t numElementsCopy = numElements;
+       // replace left with right
+       numCapacity = rhs.numCapacity;
+       numElements = rhs.numElements;
+       // replace right with copy of left
+       rhs.numCapacity = numCapacityCopy;
+       rhs.numElements = numElementsCopy;
 
-       size_t tempElements = rhs.numElements;
-       rhs.numElements = numElements;
-       numElements = tempElements;
+       // reset left side
+       data = NULL;
+       data = new T[numCapacity];
+       
+       // set left to right
+       data = rhs.data;
+       // reset right side
+       rhs.data = NULL;
+       rhs.data = new T[rhs.numCapacity];
 
-       size_t tempCapacity = rhs.numCapacity;
-       rhs.numCapacity = numCapacity;
-       numCapacity = tempCapacity;
+       // set right to copy of left
+       rhs.data = dataCopy;
+       // set copy to null
+       dataCopy = NULL;
+       if (rhs.numCapacity == 0)
+           rhs.data = NULL;
+       if (numCapacity == 0)
+           data = NULL;
    }
    vector & operator = (const vector & rhs);
    vector& operator = (vector&& rhs);
@@ -109,12 +130,10 @@ public:
    void clear()
    {
        numElements = 0;
-       delete[] data;
    }
    void pop_back()
    {
-      if(numElements > 0)
-        numElements--;
+       numElements--;
    }
    void shrink_to_fit();
 
@@ -124,7 +143,7 @@ public:
 
    size_t   size()          const { return numElements;}
    size_t   capacity()      const { return numCapacity;}
-   bool     empty()               { return (begin() == end() ? true : false);}
+   bool   empty()          { return (begin() == end() ? true : false);}
    
    // adjust the size of the buffer
    
@@ -164,6 +183,11 @@ vector <T> :: vector(size_t num, const T & t)
 {
     numCapacity = num;
     numElements = num;
+    //data = new T[numCapacity];
+    /*for (int i = 0;i < numCapacity; i++)
+    {
+        data[i] = t;
+    }*/
     resize(num, t);
 }
 
@@ -191,12 +215,13 @@ vector <T> :: vector(const std::initializer_list<T> & l)
 template <typename T>
 vector <T> :: vector(size_t num) 
 {
-    if (num == 0) {
-        data = NULL;
-        return;
-    }
     data = new T[num];
     resize(num);
+    /*T input = 0;
+    for (int i = 0;i < num;i++)
+    {
+        data[i] = input;
+    }*/
 }
 
 /*****************************************
@@ -207,16 +232,12 @@ vector <T> :: vector(size_t num)
 template <typename T>
 vector <T> :: vector (const vector & rhs) 
 {
-    if (rhs.data == NULL) {
-        data = NULL;
-        return;
-    }
-
     data = NULL;
     numElements = 0;
     numCapacity = 0;
     
     *this = rhs;
+
 }
 
 /*****************************************
@@ -227,7 +248,7 @@ template <typename T>
 vector <T> :: vector (vector && rhs)
 {
     // this is the simpler code, but it brings the percentage down a bit.
-    
+    /*
     data = rhs.data;
     rhs.data = NULL;
     
@@ -236,6 +257,25 @@ vector <T> :: vector (vector && rhs)
     
     numCapacity = rhs.numCapacity;
     rhs.numCapacity = 0;
+    */
+    
+    if (rhs.numCapacity == 0)
+    {
+        data = NULL;
+        rhs.numCapacity = 0;
+        rhs.numElements = 0;
+        rhs.data = NULL;
+        return;
+    }
+
+    numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
+    
+    rhs.numCapacity = 0;
+    rhs.numElements = 0;
+    data = rhs.data;
+    rhs.data = NULL;
+     
 }
 
 /*****************************************
@@ -250,6 +290,7 @@ vector <T> :: ~vector()
     numCapacity = 0;
     if (numElements > 0) {
         numElements = 0; // Set to 0
+        shrink_to_fit();     // remove all elements between numElements (0) and numCapacity
     }
     delete[] data;
 }
@@ -266,6 +307,12 @@ void vector <T> :: resize(size_t newElements)
 {
     reserve(newElements);
     
+    /*if (!newElements || newElements == 0)
+    {
+        data = NULL;
+        numElements = 0;
+        return;
+    } */ 
     for (int i = numElements; i < newElements; i++) {
         data[i] = 0;
     }
@@ -277,10 +324,20 @@ template <typename T>
 void vector <T> :: resize(size_t newElements, const T & t)
 {
     reserve(newElements);
+
+    /*if (!newElements || newElements == 0)
+    {
+        data = NULL;
+        numElements = 0;
+        return;
+    }*/
     
     for (int i = numElements; i < newElements; i++) {
         data[i] = t;
     }
+    /*for (; numElements < numCapacity; numElements++) {
+        data[numElements] = t;
+    }*/
     numElements = newElements;
 }
 
@@ -301,7 +358,7 @@ void vector <T> :: reserve(size_t newCapacity)
     
     T * dataNew = new T[newCapacity];
     
-    for (int i = 0; i < numElements; i++) {
+    for (int i = 0; i <= numElements; i++) {
         dataNew[i] = data[i];
     }
     delete [] data;
@@ -335,6 +392,7 @@ void vector <T> :: shrink_to_fit()
 template <typename T>
 T & vector <T> :: operator [] (size_t index)
 {
+    /*return *(data + index);*/
     return data[index];
 }
 
@@ -400,11 +458,11 @@ const T & vector <T> :: back() const
 template <typename T>
 void vector <T> :: push_back (const T & t)
 {
-    if (capacity() == 0)
-        reserve(1);
+    if (this->numCapacity == 0)
+        resize(1);
 
-    if (size() == capacity())
-        reserve(this->numCapacity * 2);
+    if (this->numElements == this->numCapacity)
+        resize(this->numCapacity * 2);
 
     data[numElements++] = t;
 }
@@ -412,11 +470,11 @@ void vector <T> :: push_back (const T & t)
 template <typename T>
 void vector <T> ::push_back(T && t)
 {
-    if (capacity() == 0)
-        reserve(1);
+    if (this->numCapacity == 0)
+        resize(1);
 
-    if (size() == capacity())
-        reserve(this->numCapacity * 2);
+    if (this->numElements == this->numCapacity)
+        resize(this->numCapacity * 2);
 
     data[numElements++] = t;
 }
@@ -447,9 +505,16 @@ vector <T> & vector <T> :: operator = (const vector & rhs)
 template <typename T>
 vector <T>& vector <T> :: operator = (vector&& rhs)
 {
-    clear();
-    swap(rhs);
-    
+    numCapacity = rhs.numCapacity;
+    numElements = rhs.numElements;
+    data = NULL;
+    data = new T[numCapacity];
+
+    // set left to right
+    for (int i = 0; i < numElements; i++)
+    {
+        data[i] = rhs.data[i];
+    }
     return *this;
 }
 
