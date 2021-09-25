@@ -162,9 +162,13 @@ vector <T> :: vector()
 template <typename T>
 vector <T> :: vector(size_t num, const T & t) 
 {
+    data = new T[num];
     numCapacity = num;
     numElements = num;
-    resize(num, t);
+
+    for (int i = 0; i < num; i++)
+       data[i] = t;
+    
 }
 
 /*****************************************
@@ -211,10 +215,6 @@ vector <T> :: vector (const vector & rhs)
         data = NULL;
         return;
     }
-
-    data = NULL;
-    numElements = 0;
-    numCapacity = 0;
     
     *this = rhs;
 }
@@ -226,15 +226,14 @@ vector <T> :: vector (const vector & rhs)
 template <typename T>
 vector <T> :: vector (vector && rhs)
 {
-    // this is the simpler code, but it brings the percentage down a bit.
-    
     data = rhs.data;
     rhs.data = NULL;
     
     numElements = rhs.numElements;
     rhs.numElements = 0;
     
-    numCapacity = rhs.numCapacity;
+    if (rhs.numCapacity > numCapacity)
+        numCapacity = rhs.numCapacity;
     rhs.numCapacity = 0;
 }
 
@@ -432,10 +431,16 @@ template <typename T>
 vector <T> & vector <T> :: operator = (const vector & rhs)
 {
     if(numCapacity < rhs.numCapacity)
-        numCapacity = rhs.numCapacity;
+        reserve(rhs.size());
     numElements = rhs.numElements;
-    data = NULL;
-    data = new T[numCapacity];
+    for (int i = 0; i < numCapacity; i++) {
+        data[i] = rhs.data[i];
+    }
+
+    if (numCapacity > rhs.size()) {
+        for (int i = numElements; i < numCapacity; i++)
+            data[i] = NULL;
+    }
 
     // set left to right
     for (int i = 0; i < numElements; i++)
@@ -447,8 +452,21 @@ vector <T> & vector <T> :: operator = (const vector & rhs)
 template <typename T>
 vector <T>& vector <T> :: operator = (vector&& rhs)
 {
-    clear();
-    swap(rhs);
+    if(rhs.size() > numCapacity)
+        reserve(rhs.size());
+
+    for (int i = 0; i < numCapacity; i++) {
+        data[i] = rhs.data[i];
+    }
+
+    if (numCapacity > rhs.size()) {
+        for (int i = numElements; i < numCapacity; i++)
+            data[i] = NULL;
+    }
+
+    numElements = rhs.numElements;
+    rhs.data = NULL;
+    rhs.numElements = 0;
     
     return *this;
 }
