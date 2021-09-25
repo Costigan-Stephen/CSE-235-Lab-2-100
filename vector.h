@@ -323,7 +323,19 @@ void vector <T> :: resize(size_t newElements, const T & t)
 template <typename T>
 void vector <T> :: reserve(size_t newCapacity)
 {
-   numCapacity = 99;
+   T* newData;
+   newData = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       newData[i] = data[i];
+   }
+   numCapacity = newCapacity;
+   data = NULL;
+   data = new T[numCapacity];
+   for (int i = 0; i < numCapacity; i++)
+   {
+       data[i] = newData[i];
+   }
 }
 
 /***************************************
