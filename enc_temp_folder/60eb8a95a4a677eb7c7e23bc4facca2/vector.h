@@ -330,7 +330,8 @@ void vector <T> :: resize(size_t newElements)
         numElements = 0;
         return;
     }
-    reserve(newElements);
+    resize(newElements);
+    //numCapacity = newElements; 
 }
 
 template <typename T>
@@ -364,8 +365,6 @@ void vector <T> :: reserve(size_t newCapacity)
 {
     if (newCapacity > 0)
         numCapacity = newCapacity;
-
-    
 }
 
 /***************************************
