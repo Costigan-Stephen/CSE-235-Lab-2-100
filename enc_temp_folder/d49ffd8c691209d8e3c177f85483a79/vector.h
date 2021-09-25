@@ -330,7 +330,7 @@ void vector <T> :: resize(size_t newElements)
         numElements = 0;
         return;
     }
-    reserve(newElements); // JON, ASK TUTOR ABOUT THIS :)
+    reserve(newElements);
 }
 
 template <typename T>
@@ -365,7 +365,10 @@ void vector <T> :: reserve(size_t newCapacity)
     if (newCapacity > 0)
         numCapacity = newCapacity;
 
-    // JON, ASK TUTOR ABOUT THIS :) [hint, setting base values]
+    for (int i = 0; i < numCapacity; i++) {
+        data[i] = (data[i] > 0 ? data[i]: 0);
+    }
+    
 }
 
 /***************************************
